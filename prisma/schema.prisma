@@ -1,0 +1,80 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String       @id @default(uuid())
+  email        String       @unique
+  name         String?
+  password     String?
+  phone        String
+  username     String       @unique
+  provider     AuthProvider @default(local)
+  providerId   String?      @map("provider_id")
+  is2FAEnabled Boolean      @default(false) @map("is_2fa_enabled")
+  twoFASecret  String?      @map("two_fa_secret")
+  twoFAType    TwoFAType?   @map("two_fa_type")
+
+  createdAt      DateTime        @default(now()) @map("created_at")
+  updatedAt      DateTime        @updatedAt @map("updated_at")
+  userSessions   UserSession[]
+  passwordResets PasswordReset[]
+  twoFARequests  TwoFARequest[]
+
+  @@map("users")
+}
+
+model UserSession {
+  id           String   @id @default(uuid())
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId       String   @map("user_id")
+  refreshToken String   @unique @map("refresh_token")
+  expiresAt    DateTime @map("expires_at")
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  @@map("user_sessions")
+}
+
+model PasswordReset {
+  id        String   @id @default(uuid())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String   @map("user_id")
+  token     String   @unique
+  expiresAt DateTime @map("expires_at")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("password_resets")
+}
+
+enum AuthProvider {
+  local
+  google
+  facebook
+  apple
+}
+
+model TwoFARequest {
+  id        String   @id @default(uuid())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  code      String   @unique // Código temporário enviado por SMS/E-mail
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}
+
+enum TwoFAType {
+  TOTP
+  EMAIL
+  SMS
+}
