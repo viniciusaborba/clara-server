@@ -1,3 +1,4 @@
+import { UserAlreadyExistsError } from "@/user/use-cases/errors/user-already-exists-error";
 import { FastifyInstance } from "fastify";
 import { ZodTypeProvider } from "fastify-type-provider-zod";
 import { makeCreateUserUseCase } from "src/user/factories/make-create-user-use-case";
@@ -25,7 +26,7 @@ export async function CreateUsersRoute(app: FastifyInstance) {
 
       const createUserUseCase = makeCreateUserUseCase()
 
-      await createUserUseCase.execute({
+      const result = await createUserUseCase.execute({
         name,
         email,
         password,
@@ -33,10 +34,10 @@ export async function CreateUsersRoute(app: FastifyInstance) {
         phone
       });
 
-      // if (result.isLeft()) {
-      //   throw new UserAlreadyExistsError("User already exists!")
-      // }
-
+      if (result.isLeft()) {
+        return res.status(400).send({ message: new UserAlreadyExistsError(email).message });
+      }
+       
       return res.status(201).send();
     }
   )
