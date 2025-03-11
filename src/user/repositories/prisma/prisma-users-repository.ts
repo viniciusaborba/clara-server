@@ -6,8 +6,8 @@ import { UserMapper } from "src/user/mapper";
 export class PrismaUsersRepository implements UsersRepository {
   async create(data: User)  {
     await prisma.user.create({
-      data
-    })
+      data: UserMapper.toPersistence(data)
+    });
   }
   
   async findByEmail(email: string) {
