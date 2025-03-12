@@ -7,6 +7,7 @@ import {
   validatorCompiler,
   ZodTypeProvider,
 } from "fastify-type-provider-zod"
+import { usersRoutes } from "./http/controllers/users/routes";
 
 export const app = fastify().withTypeProvider<ZodTypeProvider>()
 
@@ -33,6 +34,10 @@ app.register(fastifySwagger, {
 app.register(fastifySwaggerUi, {
   routePrefix: "/api/v1/docs",
 })
+
+app.register(async (app) => {
+  app.register(usersRoutes)
+}, { prefix: '/api/v1' })
 
 app.setValidatorCompiler(validatorCompiler)
 app.setSerializerCompiler(serializerCompiler)
