@@ -44,8 +44,4 @@ export class User {
     const id = randomUUID();
     return new User({ id, ...props });
   }
-
-  public static delete(id: string) {
-    
-  }
 }
