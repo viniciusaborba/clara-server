@@ -7,6 +7,8 @@ interface UserProps {
   password?: string | null;
   phone: string;
   username: string;
+  createdAt: Date;
+  updatedAt?: Date | null;
 }
 
 export class User {
@@ -38,6 +40,14 @@ export class User {
 
   get username() {
     return this.props.username
+  }
+
+  get createdAt() {
+    return this.props.createdAt;
+  }
+
+  get updatedAt() {
+    return this.props.updatedAt;
   }
 
   public static create(props: Omit<UserProps, "id">): User {

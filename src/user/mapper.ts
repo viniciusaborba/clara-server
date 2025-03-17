@@ -9,7 +9,9 @@ export class UserMapper {
       email: user.email,
       password: user.password,
       phone: user.phone,
-      username: user.username
+      username: user.username,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt ?? null
     }
   }
 
@@ -19,7 +21,8 @@ export class UserMapper {
       email: data.email,
       password: data.password,
       phone: data.phone,
-      username: data.username
+      username: data.username,
+      createdAt: data.createdAt,
     })
   }
 }
