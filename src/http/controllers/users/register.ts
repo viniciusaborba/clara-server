@@ -1,16 +1,16 @@
 import { UserAlreadyExistsError } from "@/user/use-cases/errors/user-already-exists-error";
 import { FastifyInstance } from "fastify";
 import { ZodTypeProvider } from "fastify-type-provider-zod";
-import { makeCreateUserUseCase } from "src/user/factories/make-create-user-use-case";
+import { makeRegisterUserUseCase } from "@/user/factories/make-register-user-use-case";
 
 import z from "zod";
 
-export async function CreateUsersRoute(app: FastifyInstance) {
+export async function RegisterUsersRoute(app: FastifyInstance) {
   app.withTypeProvider<ZodTypeProvider>().post(
     "/users",
     {
       schema: {
-        summary: "Create new user",
+        summary: "Register new user",
         tags: ["users"],
         body: z.object({
           name: z.string(),
@@ -24,9 +24,9 @@ export async function CreateUsersRoute(app: FastifyInstance) {
     async (req, res) => {
       const { name, email, password, username, phone } = req.body;
 
-      const createUserUseCase = makeCreateUserUseCase()
+      const registerUserUseCase = makeRegisterUserUseCase()
 
-      const result = await createUserUseCase.execute({
+      const result = await registerUserUseCase.execute({
         name,
         email,
         password,

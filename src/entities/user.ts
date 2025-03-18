@@ -50,8 +50,9 @@ export class User {
     return this.props.updatedAt;
   }
 
-  public static create(props: Omit<UserProps, "id">): User {
+  public static create(props: Omit<UserProps, "id" | "createdAt">): User {
     const id = randomUUID();
-    return new User({ id, ...props });
+    const createdAt = new Date();
+    return new User({ id, createdAt, ...props });
   }
 }
