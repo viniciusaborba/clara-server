@@ -2,6 +2,7 @@ import { User } from "src/entities/user";
 import { UsersRepository } from "@/user/repositories/users-repository"
 import { Either, left, right } from "@/core/either";
 import { UserAlreadyExistsError } from "./errors/user-already-exists-error";
+import { hash } from "bcryptjs";
 
 interface CreateUserDTO {
   name: string;
@@ -21,12 +22,20 @@ type RegisterUserResponseDTO = Either<
 export class RegisterUserUseCase {
   constructor(private usersRepository: UsersRepository) {}
 
-  async execute(data: CreateUserDTO): Promise<RegisterUserResponseDTO> {
-    const userAlreadyExists = await this.usersRepository.findByEmail(data.email);
+  async execute({ email, name, password, phone, username }: CreateUserDTO): Promise<RegisterUserResponseDTO> {
+    const userAlreadyExists = await this.usersRepository.findByEmail(email);
 
-    if (userAlreadyExists) return left(new UserAlreadyExistsError(data.email));
+    const hasPassword = password ? await hash(password, 6) : null
 
-    const user = User.create(data);
+    if (userAlreadyExists) return left(new UserAlreadyExistsError(email));
+
+    const user = User.create({
+      email,
+      phone,
+      username,
+      name,
+      password: hasPassword
+    });
 
     await this.usersRepository.create(user)
 
