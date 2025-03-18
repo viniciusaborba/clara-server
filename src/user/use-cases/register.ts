@@ -21,7 +21,7 @@ type RegisterUserResponseDTO = Either<
 export class RegisterUserUseCase {
   constructor(private usersRepository: UsersRepository) {}
 
-  async execute(data: CreateUserDTO): Promise<CreateUserResponseDTO> {
+  async execute(data: CreateUserDTO): Promise<RegisterUserResponseDTO> {
     const userAlreadyExists = await this.usersRepository.findByEmail(data.email);
 
     if (userAlreadyExists) return left(new UserAlreadyExistsError(data.email));

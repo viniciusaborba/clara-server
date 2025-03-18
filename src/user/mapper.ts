@@ -15,6 +15,19 @@ export class UserMapper {
     }
   }
 
+  public static toPrisma(user: User) {
+    return {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      password: user.password,
+      phone: user.phone,
+      username: user.username,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt ?? undefined
+    }
+  }
+
   public static toDomain(data: PrismaUser) {
     return User.create({
       name: data.name,
