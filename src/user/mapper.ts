@@ -11,7 +11,7 @@ export class UserMapper {
       phone: user.phone,
       username: user.username,
       createdAt: user.createdAt,
-      updatedAt: user.updatedAt ?? null, // Para a API, mantém null
+      updatedAt: user.updatedAt ?? null,
     };
   }
 
