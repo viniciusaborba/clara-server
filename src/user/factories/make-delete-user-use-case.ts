@@ -1,5 +1,5 @@
-import { PrismaUsersRepository } from "../repositories/prisma/prisma-users-repository"
-import { DeleteUserUseCase } from "../use-cases/Delete"
+import { PrismaUsersRepository } from '../repositories/prisma/prisma-users-repository'
+import { DeleteUserUseCase } from '../use-cases/Delete'
 
 export function makeDeleteUserUseCase() {
   const prismaUsersRepository = new PrismaUsersRepository()

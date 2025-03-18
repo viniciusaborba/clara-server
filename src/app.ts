@@ -1,6 +1,6 @@
-import fastifySwagger from "@fastify/swagger";
-import fastifySwaggerUi from "@fastify/swagger-ui";
-import fastify from "fastify";
+import fastifySwagger from '@fastify/swagger'
+import fastifySwaggerUi from '@fastify/swagger-ui'
+import fastify from 'fastify'
 import {
   jsonSchemaTransform,
   serializerCompiler,
@@ -16,9 +16,9 @@ export const app = fastify().withTypeProvider<ZodTypeProvider>()
 app.register(fastifySwagger, {
   openapi: {
     info: {
-      title: "clara",
-      description: "API Documentation for Clara server application",
-      version: "1.0.0",
+      title: 'clara',
+      description: 'API Documentation for Clara server application',
+      version: '1.0.0',
     },
     components: {
       securitySchemes: {
@@ -45,12 +45,15 @@ app.register(fastifySwagger, {
 });
 
 app.register(fastifySwaggerUi, {
-  routePrefix: "/api/v1/docs",
+  routePrefix: '/api/v1/docs',
 })
 
-app.register(async (app) => {
-  app.register(usersRoutes)
-}, { prefix: '/api/v1' })
+app.register(
+  async (app) => {
+    app.register(usersRoutes)
+  },
+  { prefix: '/api/v1' },
+)
 
 app.setValidatorCompiler(validatorCompiler)
 app.setSerializerCompiler(serializerCompiler)

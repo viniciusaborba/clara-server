@@ -1,9 +1,10 @@
-import { FastifyInstance } from "fastify";
-import { RegisterUsersRoute } from "./register";
-import { DeleteUsersRoute } from "./delete";
-import { ReadUsersRoute } from "./read";
-import { AuthenticateUsersRoute } from "./authenticate";
-import { refreshUserRoute } from "./refresh";
+import { FastifyInstance } from 'fastify'
+
+import { DeleteUsersRoute } from './delete'
+import { ReadUsersRoute } from './read'
+import { RegisterUsersRoute } from './register'
+import { AuthenticateUsersRoute } from './authenticate'
+import { refreshUserRoute } from './refresh'
 
 export async function usersRoutes(app: FastifyInstance) {
   app.register(RegisterUsersRoute)
