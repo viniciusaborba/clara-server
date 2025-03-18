@@ -6,9 +6,10 @@ import {
   serializerCompiler,
   validatorCompiler,
   ZodTypeProvider,
-} from 'fastify-type-provider-zod'
-
-import { usersRoutes } from './http/controllers/users/routes'
+} from "fastify-type-provider-zod"
+import { usersRoutes } from "./http/controllers/users/routes";
+import fastifyJwt from "@fastify/jwt";
+import { env } from "./env";
 
 export const app = fastify().withTypeProvider<ZodTypeProvider>()
 
@@ -19,18 +20,29 @@ app.register(fastifySwagger, {
       description: 'API Documentation for Clara server application',
       version: '1.0.0',
     },
-    // components: {
-    //   securitySchemes: {
-    //     bearerAuth: {
-    //       type: "http",
-    //       scheme: "bearer",
-    //       bearerFormat: "JWT",
-    //     },
-    //   },
-    // },
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: "http",
+          scheme: "bearer",
+          bearerFormat: "JWT",
+        },
+      },
+    },
   },
   transform: jsonSchemaTransform,
 })
+
+  app.register(fastifyJwt, {
+    secret: env.JWT_SECRET,
+    cookie: {
+      cookieName: "refreshToken",
+      signed: false,
+    },
+    sign: {
+      expiresIn: "10m",
+    },
+});
 
 app.register(fastifySwaggerUi, {
   routePrefix: '/api/v1/docs',

@@ -1,5 +1,5 @@
-import { User as PrismaUser } from '@prisma/client'
-import { User } from 'src/entities/user'
+import { User } from "src/entities/user"
+import { User as PrismaUser } from "@prisma/client"
 
 export class UserMapper {
   public static toPersistence(user: User) {
@@ -11,7 +11,20 @@ export class UserMapper {
       phone: user.phone,
       username: user.username,
       createdAt: user.createdAt,
-      updatedAt: user.updatedAt ?? null,
+      updatedAt: user.updatedAt ?? null
+    }
+  }
+
+  public static toPrisma(user: User) {
+    return {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      password: user.password,
+      phone: user.phone,
+      username: user.username,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt ?? undefined
     }
   }
 
@@ -22,7 +35,6 @@ export class UserMapper {
       password: data.password,
       phone: data.phone,
       username: data.username,
-      createdAt: data.createdAt,
-    })
+    });
   }
 }
