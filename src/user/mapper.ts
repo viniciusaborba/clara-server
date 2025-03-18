@@ -1,8 +1,8 @@
-import { User } from "src/entities/user"
-import { User as PrismaUser } from "@prisma/client"
+import { User as PrismaUser } from '@prisma/client'
+import { User } from 'src/entities/user'
 
 export class UserMapper {
-  public static toPersistence(user: User)  {
+  public static toPersistence(user: User) {
     return {
       id: user.id,
       name: user.name,
@@ -11,7 +11,7 @@ export class UserMapper {
       phone: user.phone,
       username: user.username,
       createdAt: user.createdAt,
-      updatedAt: user.updatedAt ?? null
+      updatedAt: user.updatedAt ?? null,
     }
   }
 
