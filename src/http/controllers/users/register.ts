@@ -3,6 +3,7 @@ import { FastifyInstance } from "fastify";
 import { ZodTypeProvider } from "fastify-type-provider-zod";
 import { makeRegisterUserUseCase } from "@/user/factories/make-register-user-use-case";
 import { z } from "zod";
+import { UsernameAlreadyInUseError } from "@/user/use-cases/errors/username-already-in-use";
 
 export async function RegisterUsersRoute(app: FastifyInstance) {
   app.withTypeProvider<ZodTypeProvider>().post(
@@ -34,9 +35,22 @@ export async function RegisterUsersRoute(app: FastifyInstance) {
       })
 
       if (result.isLeft()) {
-        return res
-          .status(400)
-          .send({ message: new UserAlreadyExistsError(email).message })
+        const error = result.value;
+
+        switch (error.constructor) {
+          case UserAlreadyExistsError:
+            return res.status(409).send({
+              message: error.message,
+            });
+          case UsernameAlreadyInUseError:
+            return res.status(409).send({
+              message: error.message,
+            });
+          default:
+            return res.status(500).send({
+              message: "An unexpected error occurred",
+            });
+        }
       }
 
       return res.status(201).send()

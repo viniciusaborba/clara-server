@@ -5,6 +5,16 @@ import { UserMapper } from 'src/user/mapper'
 import { UsersRepository } from '../users-repository'
 
 export class PrismaUsersRepository implements UsersRepository {
+  async findByUsername(username: string) {
+    const user = await prisma.user.findUnique({
+      where: { username },
+    })
+
+    if (!user) return null
+
+    return UserMapper.toDomain(user)
+  }
+
   async findByEmail(email: string) {
     const user = await prisma.user.findUnique({
       where: {
