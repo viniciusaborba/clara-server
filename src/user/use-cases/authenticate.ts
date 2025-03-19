@@ -28,7 +28,7 @@ export class AuthenticateUserUseCase {
 
     if (!user) return left(new InvalidCredentialsError());
 
-    if (!user.password) return left(new InvalidCredentialsError());;
+    if (!user.password) return left(new InvalidCredentialsError());
 
     const doesPasswordMatch = await compare(password, user.password);
 

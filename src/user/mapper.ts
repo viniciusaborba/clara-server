@@ -28,13 +28,16 @@ export class UserMapper {
     }
   }
 
-  public static toDomain(data: PrismaUser) {
-    return User.create({
+  public static toDomain(data: PrismaUser): User {
+    return new User({
+      id: data.id,
       name: data.name,
       email: data.email,
       password: data.password,
       phone: data.phone,
       username: data.username,
+      createdAt: data.createdAt,
+      updatedAt: data.updatedAt ?? null,
     });
   }
 }
