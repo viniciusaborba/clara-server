@@ -31,6 +31,7 @@ model User {
   userSessions   UserSession[]
   passwordResets PasswordReset[]
   twoFARequests  TwoFARequest[]
+  Account        Account[]
 
   @@map("users")
 }
@@ -68,7 +69,7 @@ model TwoFARequest {
   id        String   @id @default(uuid())
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
-  code      String   @unique // Código temporário enviado por SMS/E-mail
+  code      String   @unique
   expiresAt DateTime
   createdAt DateTime @default(now())
 }
@@ -77,4 +78,15 @@ enum TwoFAType {
   TOTP
   EMAIL
   SMS
+}
+
+model Account {
+  id      String  @id @default(uuid())
+  name    String
+  balance Decimal @db.Decimal(10, 2)
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String @map("user_id")
+
+  @@map("accounts")
 }
