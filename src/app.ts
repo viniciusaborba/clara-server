@@ -6,10 +6,11 @@ import {
   serializerCompiler,
   validatorCompiler,
   ZodTypeProvider,
-} from "fastify-type-provider-zod"
-import { usersRoutes } from "./http/controllers/users/routes";
-import fastifyJwt from "@fastify/jwt";
-import { env } from "./env";
+} from 'fastify-type-provider-zod'
+import { usersRoutes } from './http/controllers/users/routes'
+import fastifyJwt from '@fastify/jwt'
+import { env } from './env'
+import { accountsRoutes } from './http/controllers/accounts/routes'
 
 export const app = fastify().withTypeProvider<ZodTypeProvider>()
 
@@ -23,9 +24,9 @@ app.register(fastifySwagger, {
     components: {
       securitySchemes: {
         bearerAuth: {
-          type: "http",
-          scheme: "bearer",
-          bearerFormat: "JWT",
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT',
         },
       },
     },
@@ -33,16 +34,16 @@ app.register(fastifySwagger, {
   transform: jsonSchemaTransform,
 })
 
-  app.register(fastifyJwt, {
-    secret: env.JWT_SECRET,
-    cookie: {
-      cookieName: "refreshToken",
-      signed: false,
-    },
-    sign: {
-      expiresIn: "10m",
-    },
-});
+app.register(fastifyJwt, {
+  secret: env.JWT_SECRET,
+  cookie: {
+    cookieName: 'refreshToken',
+    signed: false,
+  },
+  sign: {
+    expiresIn: '10m',
+  },
+})
 
 app.register(fastifySwaggerUi, {
   routePrefix: '/api/v1/docs',
@@ -50,9 +51,9 @@ app.register(fastifySwaggerUi, {
 
 app.register(
   async (app) => {
-    app.register(usersRoutes)
+    app.register(usersRoutes), app.register(accountsRoutes)
   },
-  { prefix: '/api/v1' },
+  { prefix: '/api/v1' }
 )
 
 app.setValidatorCompiler(validatorCompiler)
