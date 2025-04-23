@@ -4,10 +4,14 @@ import { prisma } from '@/lib/prisma'
 import { AccountMapper } from '@/account/mapper'
 
 export class PrismaAccountsRepository implements AccountsRepository {
-  async create(data: Account) {
-    await prisma.account.create({
-      data: AccountMapper.toPrisma(data),
+  async findById(accountId: any) {
+    const account = await prisma.account.findFirst({
+      where: { id: accountId },
     })
+
+    if (!account) return null;
+
+    return AccountMapper.toDomain(account);
   }
 
   async findByName(name: string, userId: string) {
@@ -18,8 +22,19 @@ export class PrismaAccountsRepository implements AccountsRepository {
       },
     })
 
-    if (!account) return null
+    if (!account) return null;
 
-    return AccountMapper.toDomain(account)
+    return AccountMapper.toDomain(account);
+  }
+  
+  async delete(accountId: string): Promise<void> {
+    await prisma.account.delete({
+      where: { id: accountId }
+    })
+  }
+  async create(data: Account) {
+    await prisma.account.create({
+      data: AccountMapper.toPrisma(data),
+    })
   }
 }
